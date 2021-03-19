@@ -28,6 +28,12 @@ public class MultiThreadingDemo {
             }
         });
 
+        t1.setName("First Thread");
+        t2.setName("Second Thread");
+
+        t1.setPriority(Thread.MIN_PRIORITY);
+        t2.setPriority(Thread.MAX_PRIORITY);
+
         t1.start();
         Thread.sleep(10);
         t2.start();
