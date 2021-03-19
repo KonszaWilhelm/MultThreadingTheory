@@ -1,12 +1,25 @@
 package com.wilhelm.konsza;
 
+class Counter {
+
+    private static int count = 0;
+
+    //synchronized is used so only one thread can use the method at a given time
+    public synchronized static void simpleCounter() {
+        count++;
+    }
+
+    public static int getCount() {
+        return count;
+    }
+}
 
 public class MultiThreadingDemo {
 
     public static void main(String[] args) throws InterruptedException {
 
 
-        Thread t1 = new Thread(() -> {
+        Thread t1 = new Thread(() -> { //Runnable object created using lambda expression as Runnable is a Functional Interface
             for (int i = 0; i < 5; i++) {
                 System.out.println("Thread 1");
                 try {
@@ -42,5 +55,29 @@ public class MultiThreadingDemo {
         t2.join();
 
         System.out.println("Main Thread expression to test join");
+
+        //Testing synchronized keyword -> makes method threadsafe meaning that only one thread can use the method at a given time
+
+
+        Thread t3 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                Counter.simpleCounter();
+            }
+        });
+
+        Thread t4 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                Counter.simpleCounter();
+            }
+        });
+
+        t3.start();
+        t4.start();
+
+        // without join the main thread won't wait for t3 and t4 to complete it's job
+        t3.join();
+        t4.join();
+
+        System.out.println("Counter: " + Counter.getCount());
     }
 }
